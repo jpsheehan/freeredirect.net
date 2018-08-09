@@ -1,0 +1,30 @@
+<!doctype html>
+<title>FreeRedirect Site Maintenance</title>
+<style>
+  body { text-align: center; padding: 100px; background-color: #111; }
+  h1 { font-size: 50px; }
+  body { font: 20px Helvetica, sans-serif; color: #eee; }
+  article { display: block; text-align: center; width: 650px; margin: 0 auto; }
+  a { color: #dc8100; text-decoration: none; }
+  a:hover { color: #333; text-decoration: none; }
+  span { font-size: 12px; }
+</style>
+
+<article>
+    <img src='logo.png' />
+    <div id='container'>
+        <p>Sorry for the inconvenience but we&rsquo;re performing some maintenance at the moment. We&rsquo;ll be back online shortly!</p>
+        <p>&mdash; The Team</p>
+    </div>
+</article>
+
+<script>
+    if (location.hash) {
+        var cont = document.getElementById('container');
+        var host = location.hash.substr(1);
+        var safeHost = host.replace(/[^a-zA-Z0-9_\-\.]/g, '');
+
+        if (safeHost.length > 5)
+            cont.innerHTML = `Unfortunately, the domain ${safeHost} is not redirected by us!`;
+    }
+</script>
