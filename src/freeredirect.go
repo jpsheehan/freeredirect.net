@@ -46,6 +46,7 @@ func loadHosts() {
 	//hostMap["freeredirect.local"] = "http://freeredirect.net"
 	hostMap["auracreative.nz"] = "https://www.facebook.com/AuraCreativeArt/"
 	hostMap["mclovin.co.nz"] = "https://www.linkedin.com/in/michael-gallagher-2a3538122/"
+	hostMap["www.mclovin.co.nz"] = "https://www.linkedin.com/in/michael-gallagher-2a3538122/"
 }
 
 func main() {
