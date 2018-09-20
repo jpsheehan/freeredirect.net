@@ -10,6 +10,10 @@ import (
 
 var db *sql.DB
 
+func dbGet() *sql.DB {
+	return db
+}
+
 func dbConnect() error {
 
 	var err error
@@ -84,8 +88,6 @@ func dbCreateTestData() error {
 		statement.Exec(3, "mclovin.co.nz", "https://www.linkedin.com/in/michael-gallagher-2a3538122/")
 	}
 
-	fmt.Println("Finished inserting test data")
-
 	return nil
 }
 
@@ -144,8 +146,11 @@ func main() {
 	checkError(dbInitialize())
 	checkError(dbCreateTestData())
 
-	domain := "www.mclovin.co.nz"
+	var acc Account
+	if err := acc.load(2); err != nil {
+		panic(err)
+	}
 
-	fmt.Printf("'%s': '%s'\n", domain, dbGetRedirectURL(domain))
+	fmt.Println(acc.toString())
 
 }
