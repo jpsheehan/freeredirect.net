@@ -84,6 +84,10 @@ func dbCreateTestData() error {
 		)`)
 
 	if err == nil {
+		statement.Exec(1, "google.local", "https://www.google.com/")
+		statement.Exec(1, "maps.local", "https://www.google.com/")
+		statement.Exec(1, "images.local", "https://www.google.com/")
+		statement.Exec(1, "test.local", "https://www.google.com/")
 		statement.Exec(2, "auracreative.nz", "https://www.facebook.com/AuraCreativeArt/")
 		statement.Exec(3, "mclovin.co.nz", "https://www.linkedin.com/in/michael-gallagher-2a3538122/")
 	}
@@ -147,10 +151,13 @@ func main() {
 	checkError(dbCreateTestData())
 
 	var acc Account
-	if err := acc.load(2); err != nil {
+	if err := acc.load(1); err != nil {
 		panic(err)
 	}
 
-	fmt.Println(acc.toString())
+	domains := acc.getDomains()
 
+	for i := 0; i < len(domains); i++ {
+		fmt.Println(domains[i].toString())
+	}
 }
