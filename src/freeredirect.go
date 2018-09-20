@@ -49,7 +49,7 @@ func loadHosts() {
 	hostMap["www.mclovin.co.nz"] = "https://www.linkedin.com/in/michael-gallagher-2a3538122/"
 }
 
-func main() {
+func main2() {
 	loadHosts()
 
 	port = 8081
