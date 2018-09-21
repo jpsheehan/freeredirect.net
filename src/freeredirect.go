@@ -3,12 +3,14 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/jpsheehan/dotenv"
 )
 
-var hostMap map[string]string
 var port int
 
 func stripPort(s string) string {
@@ -19,16 +21,9 @@ func stripPort(s string) string {
 	return s[:i]
 }
 
-func getRedirectURL(hostname string) string {
-	if val, ok := hostMap[hostname]; ok {
-		return val
-	}
-	return "https://freeredirect.net/#" + hostname
-}
-
 func handler(w http.ResponseWriter, r *http.Request) {
 	originalHost := stripPort(r.Host)
-	redirectURL := getRedirectURL(originalHost)
+	redirectURL := dbGetRedirectURL(originalHost)
 
 	timeString := time.Now().Format(time.UnixDate)
 
@@ -38,22 +33,15 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(302)
 }
 
-func loadHosts() {
-	// Populate the hostMap
-	hostMap = make(map[string]string)
-	//hostMap["google.local"] = "https://google.com"
-	//hostMap["sheehan.local"] = "https://sheehan.nz"
-	//hostMap["freeredirect.local"] = "http://freeredirect.net"
-	hostMap["auracreative.nz"] = "https://www.facebook.com/AuraCreativeArt/"
-	hostMap["mclovin.co.nz"] = "https://www.linkedin.com/in/michael-gallagher-2a3538122/"
-	hostMap["www.mclovin.co.nz"] = "https://www.linkedin.com/in/michael-gallagher-2a3538122/"
-}
+func main() {
 
-func main2() {
-	loadHosts()
+	checkError(dotenv.Config())
+	checkError(dbConnect())
 
-	port = 8081
-	address := "0.0.0.0"
+	port, err := strconv.Atoi(os.Getenv("PORT"))
+	address := os.Getenv("ADDR")
+
+	checkError(err)
 
 	timeString := time.Now().Format(time.UnixDate)
 	fullAddress := address + ":" + strconv.Itoa(port)

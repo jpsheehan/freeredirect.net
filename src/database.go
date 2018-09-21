@@ -144,20 +144,3 @@ func checkError(err error) {
 		panic(err)
 	}
 }
-
-func main() {
-	checkError(dbConnect())
-	checkError(dbInitialize())
-	checkError(dbCreateTestData())
-
-	var acc Account
-	if err := acc.load(1); err != nil {
-		panic(err)
-	}
-
-	domains := acc.getDomains()
-
-	for i := 0; i < len(domains); i++ {
-		fmt.Println(domains[i].toString())
-	}
-}
