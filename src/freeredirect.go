@@ -4,22 +4,12 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"os/signal"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/jpsheehan/dotenv"
 )
-
-var port int
-
-func stripPort(s string) string {
-	i := strings.Index(s, ":")
-	if i == -1 {
-		return s
-	}
-	return s[:i]
-}
 
 func main() {
 
@@ -36,9 +26,20 @@ func main() {
 
 	fmt.Printf("%s: Listening on %s...\n", timeString, fullAddress)
 
-	s := NewServer()
+	// setup the new server
 	httpServer := new(http.Server)
-	httpServer.Handler = s.router
+	httpServer.Handler = NewServer().router
 	httpServer.Addr = fullAddress
+
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt)
+	go func() {
+		for range c {
+			fmt.Printf("%s: Shutting down...\n", getTimeString())
+			dbDisconnect()
+			os.Exit(0)
+		}
+	}()
+
 	httpServer.ListenAndServe()
 }

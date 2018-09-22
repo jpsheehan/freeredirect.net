@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"time"
 )
 
 func (s *Server) handleDefaultHosts() http.HandlerFunc {
@@ -11,9 +10,7 @@ func (s *Server) handleDefaultHosts() http.HandlerFunc {
 		originalHost := stripPort(r.Host)
 		redirectURL := dbGetRedirectURL(originalHost)
 
-		timeString := time.Now().Format(time.UnixDate)
-
-		fmt.Printf("%s: %s -> %s\n", timeString, originalHost, redirectURL)
+		fmt.Printf("%s: %s -> %s\n", getTimeString(), originalHost, redirectURL)
 
 		w.Header().Add("Location", redirectURL)
 		w.WriteHeader(302)

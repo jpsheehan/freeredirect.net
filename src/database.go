@@ -28,6 +28,12 @@ func dbConnect() error {
 
 }
 
+func dbDisconnect() error {
+
+	return db.Close()
+
+}
+
 func dbInitialize() error {
 
 	var err error
