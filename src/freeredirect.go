@@ -5,32 +5,22 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"strconv"
-	"time"
 
 	"github.com/jpsheehan/dotenv"
 )
 
 func main() {
 
+	// setup the environment variables and database connection
 	checkError(dotenv.Config())
 	checkError(dbConnect())
-
-	port, err := strconv.Atoi(os.Getenv("PORT"))
-	address := os.Getenv("ADDR")
-
-	checkError(err)
-
-	timeString := time.Now().Format(time.UnixDate)
-	fullAddress := address + ":" + strconv.Itoa(port)
-
-	fmt.Printf("%s: Listening on %s...\n", timeString, fullAddress)
 
 	// setup the new server
 	httpServer := new(http.Server)
 	httpServer.Handler = NewServer().router
-	httpServer.Addr = fullAddress
+	httpServer.Addr = getFullAddress(os.Getenv("ADDR"), os.Getenv("PORT"))
 
+	// handle interrupt signals
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)
 	go func() {
@@ -41,5 +31,7 @@ func main() {
 		}
 	}()
 
+	// print some information and serve
+	fmt.Printf("%s: Listening on %s...\n", getTimeString(), httpServer.Addr)
 	httpServer.ListenAndServe()
 }
