@@ -1,5 +1,11 @@
 package main
 
+// consider one of the other following domains instead of freeredirect.net:
+// redirection.guru
+// redirection.network
+// redirection.ninja
+// redirection.tools
+
 import (
 	"fmt"
 	"net/http"
