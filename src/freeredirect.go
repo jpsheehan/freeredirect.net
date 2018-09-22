@@ -21,18 +21,6 @@ func stripPort(s string) string {
 	return s[:i]
 }
 
-func handler(w http.ResponseWriter, r *http.Request) {
-	originalHost := stripPort(r.Host)
-	redirectURL := dbGetRedirectURL(originalHost)
-
-	timeString := time.Now().Format(time.UnixDate)
-
-	fmt.Printf("%s: %s -> %s\n", timeString, originalHost, redirectURL)
-
-	w.Header().Add("Location", redirectURL)
-	w.WriteHeader(302)
-}
-
 func main() {
 
 	checkError(dotenv.Config())
@@ -48,6 +36,9 @@ func main() {
 
 	fmt.Printf("%s: Listening on %s...\n", timeString, fullAddress)
 
-	http.HandleFunc("/", handler)
-	http.ListenAndServe(fullAddress, nil)
+	s := NewServer()
+	httpServer := new(http.Server)
+	httpServer.Handler = s.router
+	httpServer.Addr = fullAddress
+	httpServer.ListenAndServe()
 }
